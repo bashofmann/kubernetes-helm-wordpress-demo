@@ -1,0 +1,9 @@
+controller:
+  replicaCount: 2
+  config:
+    proxy-body-size: 20M
+  publishService:
+    enabled: true
+    
+defaultBackend:
+  replicaCount: 2

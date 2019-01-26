@@ -1,0 +1,25 @@
+ingress:
+  enabled: true
+
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+
+  hosts:
+  - name: wordpress.bastian.plgrnd.be
+    path: /
+
+    tls: true
+
+    tlsSecret: wordpress.local-tls
+
+service:
+  type: ClusterIP
+
+# mariadb:
+#   enabled: false
+
+# externalDatabase:
+#   host: mysql-cluster-mysql-master
+#   user: root
+#   password: test

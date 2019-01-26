@@ -1,0 +1,65 @@
+export SSH_PUBLIC_KEY=$(cat ~/.ssh/id_rsa.pub)
+
+export CLUSTER_NAME="mhc2tnbwqk"
+
+export FLAVOR="m1.micro"
+
+export OPERATING_SYSTEM="ubuntu"
+export IMAGE_NAME="Ubuntu 18.04 LTS sys11 optimized - 2018-08-13"
+export REGION="dbl"
+export AVAILABILITY_ZONE="dbl1"
+export FLOATING_IP_POOL="ext-net"
+export K8S_VERSION="1.13.2"
+
+cat <<EOF | kubectl apply -f -
+apiVersion: cluster.k8s.io/v1alpha1
+kind: MachineDeployment
+metadata:
+  annotations:
+    cluster-autoscaler/min-size: "0"
+    cluster-autoscaler/max-size: "15"
+  name: scalable-machine-deployment
+  namespace: kube-system
+spec:
+  replicas: 0
+  minReadySeconds: 0
+  selector:
+    matchLabels:
+      deployment: scalable-machine-deployment
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  paused: false
+  template:
+    metadata:
+      labels:
+        deployment: scalable-machine-deployment
+    spec:
+      providerConfig:
+        value:
+          cloudProvider: openstack
+          cloudProviderSpec:
+            availabilityZone: ${AVAILABILITY_ZONE}
+            domainName: ""
+            flavor: ${FLAVOR}
+            floatingIpPool: ${FLOATING_IP_POOL}
+            identityEndpoint: "https://api.${REGION}.cloud.syseleven.net:5000/v3"
+            image: "${IMAGE_NAME}"
+            network: kubermatic-${CLUSTER_NAME}
+            password: ""
+            region: ${REGION}
+            securityGroups:
+            - kubermatic-${CLUSTER_NAME}
+            tenantName: ""
+            tokenId: ""
+            username: ""
+          operatingSystem: ${OPERATING_SYSTEM}
+          operatingSystemSpec:
+            distUpgradeOnBoot: false
+          sshPublicKeys:
+          - "${SSH_PUBLIC_KEY}"
+      versions:
+        kubelet: "${K8S_VERSION}"
+EOF
