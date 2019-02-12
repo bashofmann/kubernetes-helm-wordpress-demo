@@ -16,10 +16,10 @@ ingress:
 service:
   type: ClusterIP
 
-# mariadb:
-#   enabled: false
+mariadb:
+  enabled: false
 
-# externalDatabase:
-#   host: mysql-cluster-mysql-master
-#   user: root
-#   password: test
+externalDatabase:
+  host: mysql-cluster-mysql-master
+  user: root
+  password: test
