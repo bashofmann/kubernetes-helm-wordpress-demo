@@ -54,6 +54,8 @@ spec:
         - --source=ingress
         - --domain-filter=plgrnd.be
         - --provider=digitalocean
+        - --registry=txt
+        - --txt-owner-id=bastian12345
         env:
         - name: DO_TOKEN
-          value: "...
+          value: ...
