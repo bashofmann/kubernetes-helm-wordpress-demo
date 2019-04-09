@@ -1,0 +1,28 @@
+# helm upgrade --install prometheus-operator --namespace monitoring stable/prometheus-operator -f prometheus-operator.yaml
+
+grafana:
+  ingress:
+    enabled: true
+    hosts:
+      - grafana.k8s.bastianhofmann.de
+
+prometheus:
+  ingress:
+    enabled: true
+    hosts:
+      - prometheus.k8s.bastianhofmann.de     
+  additionalServiceMonitors:
+  - name: prometheus-operator-node-exporter
+    namespaceSelector:
+     matchNames:
+      - kube-system
+    endpoints:
+      - interval: 30s
+        port: scrape
+    jobLabel: jobLabel
+    selector:
+      matchLabels:
+        app: node-exporter
+
+nodeExporter:
+  enabled: false       

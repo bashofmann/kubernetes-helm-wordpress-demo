@@ -1,0 +1,10 @@
+server:
+  ingress:
+    enabled: true
+
+    hosts:
+      - prometheus.phpuk19.plgrnd.be
+
+    tls:
+      - hosts:
+          - prometheus.phpuk19.plgrnd.be

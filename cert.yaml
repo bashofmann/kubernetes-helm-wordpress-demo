@@ -1,0 +1,20 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: plgrnd
+  namespace: kube-system
+spec:
+  secretName: plgrnd-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: '*.bastian.plgrnd.be'
+  dnsNames:
+  - bastian.plgrnd.be
+  acme:
+    config:
+    - dns01:
+        provider: digitalocean
+      domains:
+      - '*.bastian.plgrnd.be'
+      - bastian.plgrnd.be
