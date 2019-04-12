@@ -6,10 +6,18 @@ helm upgrade --install nginx-ingress stable/nginx-ingress -f ingress-controller.
 
 ## Install cert-manager and a cluster issuer to automatically retrieve LetsEncrypt certificates for an ingress resource
 
-kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.6/deploy/manifests/00-crds.yaml
+kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.7/deploy/manifests/00-crds.yaml
 kubectl label namespace kube-system certmanager.k8s.io/disable-validation="true"
-helm upgrade --install cert-manager stable/cert-manager --namespace kube-system 
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm install \
+  --name cert-manager \
+  --namespace kube-system \
+  --version v0.7.0 \
+  jetstack/cert-manager
+kubectl create secret generic digitalocean-dns --from-literal=access-token=xxx     
 kubectl apply -f cluster-issuer.yaml --namespace kube-system
+kubectl apply -f cert.yaml --namespace kube-system
 
 ## Install external-dns to automatically create DNS entries for ingress resources
 
